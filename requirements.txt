@@ -5,3 +5,5 @@ numpy
 soundfile
 gunicorn
 scikit-learn
+audioread
+ffmpeg-python

@@ -1,8 +1,10 @@
+import os
+os.environ["NUMBA_CACHE_DIR"] = "/tmp"   # helps reduce memory issues on Render
+
 from flask import Flask, request, jsonify
 import joblib
 import librosa
 import numpy as np
-import os
 import tempfile
 
 app = Flask(__name__)
@@ -11,7 +13,7 @@ app = Flask(__name__)
 model = joblib.load("baby_cry_rf_model.pkl")
 encoder = joblib.load("label_encoder.pkl")
 
-# Audio settings (same as Streamlit)
+# Audio settings
 SAMPLING_RATE = 16000
 N_MFCC = 13
 N_FFT = 2048
@@ -45,10 +47,10 @@ def predict():
     if file.filename == "":
         return jsonify({"error": "Empty filename"}), 400
 
-    # Save file temporarily (Windows safe)
+    # Save file temporarily
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
     temp_path = temp_file.name
-    temp_file.close()   # IMPORTANT (prevents file lock issue)
+    temp_file.close()
     file.save(temp_path)
 
     try:
